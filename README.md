@@ -1,4 +1,4 @@
-[Bike_Sharing_DES_Optimization_GitHub_Summary_v4.md](https://github.com/user-attachments/files/28522634/Bike_Sharing_DES_Optimization_GitHub_Summary_v4.md)
+[Bike_Sharing_DES_Optimization_GitHub_Summary_v5.md](https://github.com/user-attachments/files/28522725/Bike_Sharing_DES_Optimization_GitHub_Summary_v5.md)
 # Bike Sharing System Rebalancing Using Discrete-Event Simulation and Optimization
 
 ## Project Summary
@@ -160,3 +160,15 @@ A valid Gurobi installation and license are required to solve the optimization m
 ## Key Takeaway
 
 This project demonstrates how discrete-event simulation and mathematical optimization can be integrated to evaluate operational policies in shared mobility systems. The optimization model provides daily bike allocation decisions, while the simulation environment tests those decisions under stochastic rider demand, travel times, and bike availability uncertainty. The results suggest that even a relatively compact optimization model can substantially improve bike sharing system reliability when embedded in a realistic simulation framework.
+
+## Final Experimental Result
+
+The figure below summarizes the main simulation result by comparing the imbalanced system against the balanced system after the optimization-based rebalancing policy is introduced. The balanced policy is activated after the as-is period, around day 250 of the simulation.
+
+![Final simulation result: missed demand comparison between balanced and imbalanced systems](bike_sharing_final_results.png)
+
+The top panel reports total missed demand. Before the intervention, the imbalanced system experiences consistently high missed demand. After the midnight optimization policy is introduced, the balanced system shows a large reduction in total missed demand.
+
+The middle panel reports missed demand-in, corresponding to customers who want to borrow a bike but cannot find one. This is where most of the improvement occurs: the optimization policy substantially reduces missed demand-in by allocating bikes more effectively across stations.
+
+The bottom panel reports missed demand-out, corresponding to riders who want to return a bike but cannot find an empty dock. The balanced system sacrifices a small increase in missed demand-out in order to achieve a much larger decrease in missed demand-in. Overall, this trade-off leads to a more reliable and better-balanced bike-sharing system.
