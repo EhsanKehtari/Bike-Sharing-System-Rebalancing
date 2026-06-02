@@ -1,4 +1,4 @@
-[Bike_Sharing_DES_Optimization_GitHub_Summary_v6.md](https://github.com/user-attachments/files/28522826/Bike_Sharing_DES_Optimization_GitHub_Summary_v6.md)
+[Uploading Bike_Sharing_DES_Optimization_GitHub_Summary_v7.md…]()
 # Bike Sharing System Rebalancing Using Discrete-Event Simulation and Optimization
 
 ## Project Summary
@@ -19,17 +19,17 @@ The project uses a discrete-event simulation model to evaluate an overnight bike
 
 ### Notation
 
-The set of bike-sharing stations is denoted by \(\mathcal{S}\), and the set of time periods within a day is denoted by \(\mathcal{T}\). For each station \(s \in \mathcal{S}\) and time period \(t \in \mathcal{T}\), the optimization model uses the following notation:
+Let \(\mathcal{S}\) denote the set of bike-sharing stations and \(\mathcal{T}\) denote the set of time periods within a day.
 
-$$
-\begin{array}{ll}
-X_s & \text{number of bikes allocated to station } s \text{ overnight}, \\[3pt]
-D & \text{maximum imbalance across all stations}, \\[3pt]
-B & \text{total number of available bikes in the system}, \\[3pt]
-f_t^s & \text{predicted net flow at station } s \text{ by time } t, \\[3pt]
-c(s) & \text{capacity of station } s \text{, i.e., the number of docks at station } s.
-\end{array}
-$$
+| Symbol | Meaning |
+|---|---|
+| \(s \in \mathcal{S}\) | Station index |
+| \(t \in \mathcal{T}\) | Time-period index |
+| \(X_s\) | Number of bikes allocated to station \(s\) overnight |
+| \(D\) | Maximum imbalance across all stations |
+| \(B\) | Total number of available bikes in the system |
+| \(f_t^s\) | Predicted net flow at station \(s\) by time \(t\) |
+| \(c(s)\) | Capacity of station \(s\), i.e., the number of docks at station \(s\) |
 
 The predicted net flow \(f_t^s\) is defined as cumulative demand-in minus cumulative demand-out at station \(s\) up to time \(t\). A positive value of \(f_t^s\) means that more bikes are expected to be returned to the station than borrowed from it, while a negative value means that more bikes are expected to be borrowed than returned.
 
@@ -38,23 +38,20 @@ The decision variable \(X_s\) determines the overnight allocation of bikes acros
 
 ### Base Formulation
 
-The overnight allocation problem is formulated as
+The overnight allocation problem is formulated as follows:
 
 $$
 \begin{aligned}
-(\mathcal{P}) \qquad 
 \min_{D,\,X_s} \quad & D \\
-\text{s.t.} \quad 
+\text{subject to} \quad
 & \sum_{s \in \mathcal{S}} X_s \leq B, \\
-& D \geq X_s + \min_{t \in \mathcal{T}} f_t^s, 
-&& \forall s \in \mathcal{S}, \\
-& D \geq c(s) - X_s - \max_{t \in \mathcal{T}} f_t^s, 
-&& \forall s \in \mathcal{S}, \\
-& X_s \in \{0,1,\ldots,c(s)\}, 
-&& \forall s \in \mathcal{S}, \\
+& D \geq X_s + \min_{t \in \mathcal{T}} f_t^s, \quad \forall s \in \mathcal{S}, \\
+& D \geq c(s) - X_s - \max_{t \in \mathcal{T}} f_t^s, \quad \forall s \in \mathcal{S}, \\
+& X_s \in \{0,1,\ldots,c(s)\}, \quad \forall s \in \mathcal{S}, \\
 & D \geq 0.
 \end{aligned}
 $$
+
 
 ### Explanation of the Formulation
 
