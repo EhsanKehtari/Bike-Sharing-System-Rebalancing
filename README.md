@@ -1,4 +1,4 @@
-[Uploading Bike_Sharing_DES_Optimization_GitHub_Summary_v3.md…]()
+[Bike_Sharing_DES_Optimization_GitHub_Summary_v4.md](https://github.com/user-attachments/files/28522634/Bike_Sharing_DES_Optimization_GitHub_Summary_v4.md)
 # Bike Sharing System Rebalancing Using Discrete-Event Simulation and Optimization
 
 ## Project Summary
@@ -27,16 +27,15 @@ Let:
 - \(D\): maximum imbalance across stations
 - \(B\): total number of available bikes
 - \(f_t^s\): predicted net flow at station \(s\) by time \(t\), defined as cumulative demand-in minus cumulative demand-out
-- \(c(s)\): capacity of station \(s\), i.e., the number of docks at the station
+- \(c(s)\): capacity of station \(s\), i.e., the number of docks at station \(s\)
 
 The model is based on the idea that a station can become imbalanced in two ways. First, it may run out of bikes, which creates missed demand from riders who want to borrow a bike. Second, it may run out of empty docks, which creates inconvenience for riders who want to return a bike. The optimization model chooses \(X_s\) to control both types of imbalance.
 
-### Base formulation
+### Base Formulation
 
-The overnight allocation problem is formulated as:
+The overnight allocation problem is formulated as
 
-```latex
-\[
+$$
 \begin{aligned}
 (\mathcal{P}) \qquad 
 \min_{D,\,X_s} \quad & D \\
@@ -50,94 +49,67 @@ The overnight allocation problem is formulated as:
 && \forall s \in \mathcal{S}, \\
 & D \geq 0.
 \end{aligned}
-\]
-```
+$$
 
-For Markdown renderers that support MathJax, the same formulation appears as:
-
-\[
-\begin{aligned}
-(\mathcal{P}) \qquad 
-\min_{D,\,X_s} \quad & D \\
-\text{s.t.} \quad 
-& \sum_{s \in \mathcal{S}} X_s \leq B, \\
-& D \geq X_s + \min_{t \in \mathcal{T}} f_t^s, 
-&& \forall s \in \mathcal{S}, \\
-& D \geq c(s) - X_s - \max_{t \in \mathcal{T}} f_t^s, 
-&& \forall s \in \mathcal{S}, \\
-& X_s \in \{0,1,\ldots,c(s)\}, 
-&& \forall s \in \mathcal{S}, \\
-& D \geq 0.
-\end{aligned}
-\]
-
-### Explanation of the formulation
+### Explanation of the Formulation
 
 The objective minimizes \(D\), the maximum imbalance over all stations. This creates a min-max allocation rule: instead of optimizing one station at the expense of others, the model tries to keep the worst station as balanced as possible.
 
-The first constraint,
+The first constraint is
 
-\[
-\sum_{s \in \mathcal{S}} X_s \leq B,
-\]
+$$
+\sum_{s \in \mathcal{S}} X_s \leq B.
+$$
 
-ensures that the total number of bikes assigned to stations does not exceed the number of usable bikes available in the system. The inequality allows the model to allocate fewer bikes than the total available number if this helps avoid overfilling stations.
+This ensures that the total number of bikes assigned to stations does not exceed the number of usable bikes available in the system. The inequality allows the model to allocate fewer bikes than the total available number if this helps avoid overfilling stations.
 
-The second set of constraints,
+The second set of constraints is
 
-\[
-D \geq X_s + \min_{t \in \mathcal{T}} f_t^s, 
-\qquad \forall s \in \mathcal{S},
-\]
+$$
+D \geq X_s + \min_{t \in \mathcal{T}} f_t^s,
+\qquad \forall s \in \mathcal{S}.
+$$
 
-controls the risk of a station becoming empty. Starting with \(X_s\) bikes, the most negative value of the predicted net flow represents the largest cumulative depletion of bikes during the day. If this expression is too small, the station is likely to run out of bikes. By bounding this quantity through \(D\), the model limits the maximum shortage-related imbalance.
+These constraints control the risk of a station becoming empty. Starting with \(X_s\) bikes, the most negative value of the predicted net flow represents the largest cumulative depletion of bikes during the day. If this quantity is too small, the station is likely to run out of bikes. By bounding this expression through \(D\), the model limits shortage-related imbalance.
 
-The third set of constraints,
+The third set of constraints is
 
-\[
-D \geq c(s) - X_s - \max_{t \in \mathcal{T}} f_t^s, 
-\qquad \forall s \in \mathcal{S},
-\]
+$$
+D \geq c(s) - X_s - \max_{t \in \mathcal{T}} f_t^s,
+\qquad \forall s \in \mathcal{S}.
+$$
 
-controls the risk of a station becoming full. The term \(c(s)-X_s\) is the number of empty docks immediately after overnight allocation. The maximum predicted net inflow, \(\max_t f_t^s\), captures the largest cumulative increase in station inventory during the day. This constraint therefore limits dock shortage, i.e., situations where riders cannot return bikes because the station has no empty docks.
+These constraints control the risk of a station becoming full. The term \(c(s)-X_s\) is the number of empty docks immediately after overnight allocation. The term \(\max_{t \in \mathcal{T}} f_t^s\) captures the largest cumulative net inflow into station \(s\) during the day. Together, these terms represent the station's ability to absorb returning bikes. This constraint therefore limits dock-shortage imbalance, i.e., cases in which riders cannot return bikes because the station has no empty docks.
 
 Finally,
 
-\[
+$$
 X_s \in \{0,1,\ldots,c(s)\}
-\]
+$$
 
-ensures that station allocations are integer-valued and cannot exceed station capacity.
+ensures that allocations are integer-valued and cannot exceed station capacity.
 
-### Incorporating uncertainty in bike availability
+### Incorporating Uncertainty in Bike Availability
 
-The report also considers uncertainty in the total number of usable bikes due to maintenance-related issues. If some bikes are broken, then the true number of available bikes at midnight is random. To account for this, the deterministic bike-availability constraint can be replaced by a chance-constrained version:
+The report also considers uncertainty in the number of usable bikes due to maintenance-related issues. If some bikes are broken, then the true number of available bikes at midnight is random. To account for this, the deterministic bike-availability constraint can be replaced by the chance-constrained version
 
-```latex
-\[
+$$
 \sum_{s \in \mathcal{S}} X_s \leq F^{-1}(\epsilon) + 1.
-\]
-```
-
-For Markdown renderers that support MathJax:
-
-\[
-\sum_{s \in \mathcal{S}} X_s \leq F^{-1}(\epsilon) + 1.
-\]
+$$
 
 Here, \(F^{-1}(\epsilon)\) is a quantile of the distribution of available bikes. This makes the allocation feasible with probability approximately \(1-\epsilon\). In the numerical experiment, individual bike reliability is modeled using a Bernoulli random variable, so the total number of usable bikes follows a binomial distribution.
 
-### Demand estimation and masking
+### Demand Estimation and Masking
 
 A key input to the optimization problem is \(f_t^s\), the predicted net flow at each station. The project estimates this quantity from simulated historical demand. However, raw station-level observations can be misleading because of censoring. If a rider arrives to borrow a bike when a station is empty, the observed inventory remains at zero even though there was unmet demand. Similarly, if a rider arrives to return a bike when a station is full, the station inventory remains at capacity even though there was excess return demand.
 
 To reduce this bias, the model uses masked demands. Periods in which stations are empty or full are excluded from demand estimation, which gives a cleaner estimate of the underlying demand-in and demand-out processes. These masked demand estimates are then used to compute the net-flow trajectory \(f_t^s\), which is passed to the optimization model.
 
-### Role inside the simulation
+### Role Inside the Simulation
 
-The optimization model is embedded in the discrete-event simulation as a midnight decision rule. At each midnight after the intervention period begins, the model uses the current history of masked demand to estimate net flow and compute the next day’s target allocation \(X_s\) for every station. The simulation then compares two systems under common random seeds:
+The optimization model is embedded in the discrete-event simulation as a midnight decision rule. At each midnight after the intervention period begins, the model uses the current history of masked demand to estimate net flow and compute the next day's target allocation \(X_s\) for every station. The simulation then compares two systems under common random seeds:
 
-1. an imbalanced system with no active rebalancing, and  
+1. an imbalanced system with no active rebalancing, and
 2. a balanced system in which the optimization model is applied at midnight.
 
 This simulation-optimization structure allows the project to evaluate whether the optimization policy reduces missed demand in a dynamic setting with stochastic arrivals, stochastic ride times, finite station capacities, and uncertain bike reliability.
