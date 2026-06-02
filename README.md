@@ -1,4 +1,4 @@
-[Bike_Sharing_DES_Optimization_GitHub_Summary-2.md](https://github.com/user-attachments/files/28523285/Bike_Sharing_DES_Optimization_GitHub_Summary-2.md)
+[Uploading Bike_Sharing_DES_Optimization_GitHub_Summary-3.md…]()
 # Bike Sharing System Rebalancing Using Discrete-Event Simulation and Optimization
 
 ## Project Summary
@@ -38,11 +38,7 @@ The parameter $B$ is the total number of usable bikes available for allocation, 
 The term $f_t^s$ represents the predicted cumulative net flow at station $s$ by time $t$, defined as
 
 $$
-f_t^s
-=
-\text{cumulative demand-in at station } s \text{ by time } t
--
-\text{cumulative demand-out at station } s \text{ by time } t.
+f_t^s = \bigl(\text{cumulative demand-in at station } s \text{ by time } t\bigr) - \bigl(\text{cumulative demand-out at station } s \text{ by time } t\bigr).
 $$
 
 A positive value of $f_t^s$ means that more bikes are expected to be returned to station $s$ than borrowed from it by time $t$. A negative value means that more bikes are expected to be borrowed from station $s$ than returned to it by time $t$.
